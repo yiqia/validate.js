@@ -1,0 +1,21 @@
+{
+  "name": "validate",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "main": "dist/validate.cjs.js",
+  "module": "dist/validate.js",
+  "browser": "dist/validate.iife.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.2",
+    "rollup": "^3.28.0",
+    "tslib": "^2.6.1",
+    "typescript": "^5.1.6"
+  }
+}
