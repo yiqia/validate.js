@@ -1,23 +1,33 @@
 {
-  "name": "validate",
-  "version": "0.0.1",
-  "description": "",
+  "name": "x-validate",
+  "version": "1.0.0",
+  "author": "yiqi",
+  "description": "js字段校验工具",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "rollup -c -w"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yiqia/validate.js"
+  },
+  "keywords": [
+    "utils",
+    "mp",
+    "uniapp",
+    "validate"
+  ],
   "type": "module",
   "main": "dist/validate.cjs.js",
   "module": "dist/validate.js",
   "browser": "dist/validate.iife.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.22.10",
     "@babel/preset-env": "^7.22.10",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-node-resolve": "^15.2.0",
-    "rollup": "^3.28.0"
+    "rollup": "^3.28.0",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }
