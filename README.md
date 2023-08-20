@@ -1,31 +1,52 @@
 ```js
- var validator = new Validator('example_form', [{
-        name: 'req',
-        display: 'required',
-        rules: 'required'
-    }, {
-        name: 'alphanumeric',
-        rules: 'alpha_numeric'
-    }, {
-        name: 'password',
-        rules: 'required'
-    }, {
-        name: 'password_confirm',
-        display: 'password confirmation',
-        rules: 'required|matches[password]'
-    }, {
-        name: 'email',
-        rules: 'valid_email'
-    }, {
-        name: 'minlength',
-        display: 'min length',
-        rules: 'min_length[8]'
-    }, {
-        names: ['fname', 'lname'],
-        rules: 'required|alpha'
-    }], function(errors) {
-        if (errors.length > 0) {
-            // Show the errors
-        }
-    });
+import Validate from "../dist/validate.js";
+
+const obj = {
+  name: "John",
+  mobile: "17602358181",
+  pass: "123456",
+  father: {
+    name: "John father",
+  },
+  diy: "diy",
+};
+
+const rules = {
+  name: [{ rule: "required", msg: "名称不能为空" }],
+  mobile: [
+    { rule: "required", msg: "手机号码不能为空" },
+    { rule: "mobile", msg: "手机号码格式不对" },
+  ],
+  pass: [{ rule: "required", msg: "密码不能为空" }],
+  father: {
+    name: [{ rule: "required", msg: "名称不能为空" }],
+  },
+  diy: [
+    {
+      rule: (value, resolve, reject) => {
+        setTimeout(() => {
+          if (value === "diy") {
+            console.log("diy");
+            resolve();
+          } else {
+            reject({
+              rule: "check",
+              msg: "diy错误",
+            });
+          }
+        }, 1000);
+      },
+      msg: "diy",
+    },
+  ],
+};
+
+new Validate(obj, rules)
+  .then(() => {
+    console.log("success");
+  })
+  .catch((err) => {
+    console.log("err", JSON.stringify(err));
+  });
+
 ```

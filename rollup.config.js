@@ -1,7 +1,8 @@
-import typescript from "@rollup/plugin-typescript";
+import resolve from "@rollup/plugin-node-resolve";
+import babel from "@rollup/plugin-babel";
 
 export default {
-  input: "src/index.ts",
+  input: "src/index.js",
   output: [
     {
       file: "./dist/validate.js",
@@ -17,5 +18,5 @@ export default {
       format: "iife",
     },
   ],
-  plugins: [typescript()],
+  plugins: [resolve(), babel({ babelHelpers: "bundled" })],
 };
