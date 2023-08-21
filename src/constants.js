@@ -67,4 +67,7 @@ export const RULES_LIST = {
   idCard(fieldValue) {
     return RULES_REGEX.idCard.test(fieldValue);
   },
+  email(fieldValue) {
+    return RULES_REGEX.email.test(fieldValue);
+  },
 };

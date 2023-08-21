@@ -1,49 +1,68 @@
 import Validate from "../dist/validate.js";
 
-const obj = {
-  name: "John",
-  mobile: "17602358181",
-  pass: "123456",
-  father: {
-    name: "John father",
-  },
-  diy: "diy",
+const formInfo = {
+  name: "",
+  mobile: "1760235881",
+  pass: "12345",
+  comPass: "123457",
+  email: "6@q05.cc",
 };
 
 const rules = {
-  name: [{ rule: "required", msg: "名称不能为空" }],
+  name: { rule: "required", msg: "请填写真实姓名" },
   mobile: [
     { rule: "required", msg: "手机号码不能为空" },
     { rule: "mobile", msg: "手机号码格式不对" },
   ],
-  pass: [{ rule: "required", msg: "密码不能为空" }],
-  father: {
-    name: [{ rule: "required", msg: "名称不能为空" }],
-  },
-  diy: [
+  pass: [
+    { rule: "required", msg: "密码不能为空" },
+    { rule: "min", value: "6", msg: "密码必须要大于等于6位" },
+  ],
+  comPass: [
     {
+      name: "repeat",
+      rule: (value, resolve, reject) => {
+        if (value === formInfo.pass) {
+          resolve();
+        } else {
+          reject();
+        }
+      },
+      msg: "两次密码不一致",
+    },
+  ],
+  email: [
+    { rule: "email", msg: "邮箱格式不对" },
+    {
+      name: "emailRepeat",
       rule: (value, resolve, reject) => {
         setTimeout(() => {
-          if (value === "diy") {
-            console.log("diy");
-            resolve();
+          if (value === "6@q05.cc") {
+            reject();
           } else {
-            reject({
-              rule: "check",
-              msg: "diy错误",
-            });
+            resolve();
           }
         }, 1000);
       },
-      msg: "diy",
+      msg: "邮箱已存在",
     },
   ],
 };
 
-new Validate(obj, rules)
+new Validate(formInfo, rules)
   .then(() => {
-    console.log("success");
+    console.log("提交成功");
   })
   .catch((err) => {
-    console.log("err", JSON.stringify(err));
+    console.log("err", err);
   });
+
+/* 执行结果
+err {
+  name: [ { rule: 'required', msg: '请填写真实姓名' } ],
+  mobile: [ { rule: 'mobile', msg: '手机号码格式不对' } ],
+  pass: [ { rule: 'min', value: '6', msg: '密码必须要大于等于6位' } ],
+  comPass: [ { rule: 'repeat', msg: '两次密码不一致' } ],
+  email: [ { rule: 'emailRepeat', msg: '邮箱已存在' } ]
+}
+*/

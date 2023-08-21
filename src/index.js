@@ -23,6 +23,12 @@ Validate.prototype.init = function () {
   for (let i = 0; i < fields.length; i++) {
     const field = fields[i];
     const rules = this.rules[field];
+    // 是object对象而非数组直接添加验证列表
+    if (rules && typeof rules === "object" && !Array.isArray(rules)) {
+      this.pending.push(this.check(field, this.target[field], rules));
+      continue;
+    }
+    // 是数组遍历添加验证列表
     if (rules && rules.length > 0) {
       for (let j = 0; j < rules.length; j++) {
         const rule = rules[j];
@@ -41,8 +47,11 @@ Validate.prototype.check = function (field, value, rule) {
         () => {
           resolve();
         },
-        (error) => {
-          this.insertError(field, error);
+        () => {
+          this.insertError(field, {
+            rule: rule.name,
+            msg: rule.msg,
+          });
           reject();
         }
       );
