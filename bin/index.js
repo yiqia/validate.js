@@ -21,13 +21,7 @@ const rules = {
   comPass: [
     {
       name: "repeat",
-      rule: (value, resolve, reject) => {
-        if (value === formInfo.pass) {
-          resolve();
-        } else {
-          reject();
-        }
-      },
+      rule: (value) => value === formInfo.pass,
       msg: "两次密码不一致",
     },
   ],
@@ -35,27 +29,32 @@ const rules = {
     { rule: "email", msg: "邮箱格式不对" },
     {
       name: "emailRepeat",
-      rule: (value, resolve, reject) => {
-        setTimeout(() => {
-          if (value === "6@q05.cc") {
-            reject();
-          } else {
-            resolve();
-          }
-        }, 1000);
+      rule: (value) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (value === "6@q05.cc") {
+              reject();
+            } else {
+              resolve();
+            }
+          }, 1000);
+        });
       },
       msg: "邮箱已存在",
     },
   ],
 };
 
-new Validate(formInfo, rules)
-  .then(() => {
-    console.log("提交成功");
-  })
-  .catch((err) => {
-    console.log("err", err);
-  });
+const validator = new Validate(rules);
+
+validator
+  .validate(formInfo)
+  // .then(() => {
+  //   console.log("提交成功");
+  // })
+  // .catch((err) => {
+  //   console.log("err", err);
+  // });
 
 /* 执行结果
 err {

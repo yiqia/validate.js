@@ -1,79 +1,48 @@
 import { RULES_LIST } from "./constants";
 
-function Validate(target, rules) {
-  this.target = target;
-  this.rules = rules;
-  this.pending = [];
-  this.error = {};
-  this.init();
-  return new Promise((resolve, reject) => {
-    Promise.allSettled(this.pending).then(() => {
-      if (Object.keys(this.error).length > 0) {
-        reject(this.error);
-        return;
-      }
-      resolve();
-    });
-  });
-}
+class Validate {
+  data = {}; // 待验证数据
+  rules = {}; // 验证规则列表
+  error = {}; // 验证错误信息
+  constructor(rules) {
+    this.rules = rules;
+  }
 
-// 初始化验证器
-Validate.prototype.init = function () {
-  const fields = Object.keys(this.target);
-  for (let i = 0; i < fields.length; i++) {
-    const field = fields[i];
-    const rules = this.rules[field];
-    // 是object对象而非数组直接添加验证列表
-    if (rules && typeof rules === "object" && !Array.isArray(rules)) {
-      this.pending.push(this.check(field, this.target[field], rules));
-      continue;
-    }
-    // 是数组遍历添加验证列表
-    if (rules && rules.length > 0) {
-      for (let j = 0; j < rules.length; j++) {
-        const rule = rules[j];
-        this.pending.push(this.check(field, this.target[field], rule));
+  validate(data) {
+    this.data = data;
+    this.init();
+    // return Promise.allSettled(this.pendingRules);
+  }
+
+  init() {
+    const fields = Object.keys(this.data);
+    for (let i = 0; i < fields.length; i++) {
+      const field = fields[i];
+      const rules = this.rules[field];
+      // 规则列表是单个对象而不是数组
+      if (isObjectNotArray(rules)) {
+        this.validateField(field, this.data[field], rules);
       }
+      console.log(rules);
     }
   }
-};
+  /**
+   *
+   * @param {string} field
+   * @param {*} value
+   * @param {*} rule
+   */
+  validateField(field, value, rule) {
+    // if(typeof rule.rule === 'function') {
 
-// 验证
-Validate.prototype.check = function (field, value, rule) {
-  return new Promise((resolve, reject) => {
-    if (typeof rule.rule === "function") {
-      rule.rule(
-        value,
-        () => {
-          resolve();
-        },
-        () => {
-          this.insertError(field, {
-            rule: rule.name,
-            msg: rule.msg,
-          });
-          reject();
-        }
-      );
+    // }
+
+    if (RULES_LIST[rule.rule]) {
+      return RULES_LIST[rule.rule](value, rule?.value);
     } else {
-      const res = RULES_LIST[rule.rule](value, rule.value || undefined);
-      if (res) {
-        resolve();
-      } else {
-        this.insertError(field, rule);
-        reject();
-      }
+      throw new Error(`规则${rule.rule}不存在`);
     }
-  });
-};
-
-// 插入错误
-Validate.prototype.insertError = function (field, rule) {
-  if (!this.error[field]) {
-    this.error[field] = [rule];
-  } else {
-    this.error[field].push(rule);
   }
-};
+}
 
 export default Validate;
