@@ -1,6 +1,6 @@
 {
   "name": "x-validate",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "yiqi",
   "description": "js字段校验工具",
   "scripts": {
